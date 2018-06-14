@@ -1,3 +1,7 @@
 grammar Demo;
 
-addition: '4' '+' '2';
+addition: addition SIGN_ADD NUMBER
+        |   NUMBER;
+
+NUMBER: [0-9]+;
+SIGN_ADD: '+';
