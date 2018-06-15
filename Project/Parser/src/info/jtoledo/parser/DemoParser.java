@@ -80,18 +80,38 @@ public class DemoParser extends Parser {
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 	public static class AdditionContext extends ParserRuleContext {
-		public TerminalNode NUMBER() { return getToken(DemoParser.NUMBER, 0); }
-		public AdditionContext addition() {
-			return getRuleContext(AdditionContext.class,0);
-		}
-		public TerminalNode SIGN_ADD() { return getToken(DemoParser.SIGN_ADD, 0); }
 		public AdditionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_addition; }
+	 
+		public AdditionContext() { }
+		public void copyFrom(AdditionContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class NumberContext extends AdditionContext {
+		public Token number;
+		public TerminalNode NUMBER() { return getToken(DemoParser.NUMBER, 0); }
+		public NumberContext(AdditionContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof DemoVisitor ) return ((DemoVisitor<? extends T>)visitor).visitAddition(this);
+			if ( visitor instanceof DemoVisitor ) return ((DemoVisitor<? extends T>)visitor).visitNumber(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class PlusContext extends AdditionContext {
+		public AdditionContext left;
+		public Token right;
+		public TerminalNode SIGN_ADD() { return getToken(DemoParser.SIGN_ADD, 0); }
+		public AdditionContext addition() {
+			return getRuleContext(AdditionContext.class,0);
+		}
+		public TerminalNode NUMBER() { return getToken(DemoParser.NUMBER, 0); }
+		public PlusContext(AdditionContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof DemoVisitor ) return ((DemoVisitor<? extends T>)visitor).visitPlus(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -112,8 +132,12 @@ public class DemoParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			{
+			_localctx = new NumberContext(_localctx);
+			_ctx = _localctx;
+			_prevctx = _localctx;
+
 			setState(3);
-			match(NUMBER);
+			((NumberContext)_localctx).number = match(NUMBER);
 			}
 			_ctx.stop = _input.LT(-1);
 			setState(10);
@@ -125,14 +149,15 @@ public class DemoParser extends Parser {
 					_prevctx = _localctx;
 					{
 					{
-					_localctx = new AdditionContext(_parentctx, _parentState);
+					_localctx = new PlusContext(new AdditionContext(_parentctx, _parentState));
+					((PlusContext)_localctx).left = _prevctx;
 					pushNewRecursionContext(_localctx, _startState, RULE_addition);
 					setState(5);
 					if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
 					setState(6);
 					match(SIGN_ADD);
 					setState(7);
-					match(NUMBER);
+					((PlusContext)_localctx).right = match(NUMBER);
 					}
 					} 
 				}
