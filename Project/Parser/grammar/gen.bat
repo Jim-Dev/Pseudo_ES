@@ -1,0 +1,1 @@
+java -jar ../lib/antlr-4.7.1-complete.jar -package info.jtoledo.parser -o ../src/info/jtoledo/parser -no-listener -visitor Demo.g4
