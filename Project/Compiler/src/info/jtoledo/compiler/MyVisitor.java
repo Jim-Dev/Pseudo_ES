@@ -12,13 +12,13 @@ public class MyVisitor extends DemoBaseVisitor<String>
 	public String visitPlus(PlusContext ctx) 
 	{
 		return visitChildren(ctx) + "\n" +
-		ctx.right.getText() + "\n" +
-		"addition";
+		"ldc " + ctx.right.getText() + "\n" +
+		"iadd";
 	}
 	@Override
 	public String visitNumber(NumberContext ctx) 
 	{
-		return ctx.number.getText();
+		return "ldc " + ctx.number.getText();
 	}
 	
 	@Override

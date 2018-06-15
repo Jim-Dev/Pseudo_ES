@@ -20,7 +20,27 @@ public class Main {
 		DemoParser parser = new DemoParser(tokens);
 		
 		ParseTree tree = parser.addition();
-		System.out.println(new MyVisitor().visit(tree));
+		System.out.println(createJasminFile(new MyVisitor().visit(tree)));
+	}
+	
+	private static String createJasminFile(String instructions)
+	{
+		return ".class public TestClass\r\n" + 
+				".super java/lang/Object\r\n" + 
+				"\r\n" + 
+				".method public static main([Ljava/lang/String;)V\r\n" + 
+				"    .limit stack 100\r\n" + 
+				"    .limit locals 100\r\n" + 
+				"\r\n" + 
+				"    getstatic java/lang/System/out Ljava/io/PrintStream;\r\n" +
+				
+				instructions + "\r\n"+
+				
+				"    invokevirtual java/io/PrintStream/println(I)V\r\n" + 
+				"    return\r\n" + 
+				"\r\n" + 
+				".end method";
+		
 	}
 
 }
